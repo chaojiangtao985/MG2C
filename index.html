@@ -2,329 +2,150 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>MG2C_v2.1</title>
+<title>MapGene2Chrom web v2</title>
 
 <style type="text/css">
-.cite{color:black; font-size:12px; font:"Times New Man"; padding-top:3px; }
 .t_title0{color:black; font-size:12px; font:"Times New Man"; padding-top:15px; }
 .t_title1{border:solid 1px gray;color:black; font-size:12px; font:"Times New Man"; }
 .t_title2{border-bottom:solid 1px green; color:black; font-size:13px; font:"Times New Man";  border-left:solid 1px green;border-right:solid 1px green;}
 .input_note{font-size:13px;color:#666666;}
 .input{font-size:13px;}
-div a{color:#000000; text-decoration:none;}
-td a{color:#228B22;text-decoration:underline;}
-.topline{border-bottom:#009966 4px solid; padding-left:30px;padding-top:10px; margin-left: auto;margin-right: auto;}
-.bottomline{border-top:#009966 2px solid; padding-top:10px;padding-bottom:10px;}
+a{ color:#000000; text-decoration:none;}
+.topline{border-bottom:#009966 4px solid; padding-left:30px;padding-top:30px; margin-left: auto;margin-right: auto;}
+.bottomline{border-top:#009966 2px solid; padding-top:10px;padding-bottom:30px;}
 
 
 </style>
 
 </head>
-<body style="width:1110px;background:#FFFFFF;">
-<div class="topline" align="center">
-<img src="images/logo011.jpg" style="padding-right:1px; " /><br><a href="../mg2c_v1.0" class="STYLE1">v1.0</a> | <a href="../mg2c_v1.1">v1.1</a> | <a href="../mg2c_v2.0">v2.0</a>  | <a href="../mg2c_v2.1">v2.1</a>
+<body style="width:1110px;">
+<div class="topline" >
+<img src="images/logo01.jpg" style="padding-right:30px; " /><img src="images/logo02.jpg" style="padding-right:100px; "/> <a href="../mg2c_v1.0" class="STYLE1">v1.0</a> | <a href="../mg2c_v1.1">v1.1</a> | <a href="../mg2c_v2.0">v2.0</a>  | <a href="../mg2c_v2.1">v2.1</a>
+
 </div>
 
-<FORM METHOD=POST ACTION="mg2c_2.1_web.pl" target="results">
-<div style="width:330px; float:left; margin-left: auto;margin-right: auto; border-right:#009966 4px ridge">
-<table id="option" style="border:inline green;" align="center" width="330">
+<FORM METHOD=POST ACTION="mapGene2Chrom_web_v2.pl" target="results">
+<div style="width:300px; float:left; margin-left: auto;margin-right: auto; border-right:#009966 4px ridge">
+<table id="option" style="border:inline green;" align="center" width="300">
 
 <tr><td align="center" style=" border-bottom:black 1px ridge;padding-bottom:5px; padding-top:20px; font-weight:bold;" >parameters setting</td></tr>
 <tr><td align="left" class="t_title0">chromosome id</td></tr>
 
 <tr><td class="t_title1">
-font<input name="title_font_family" title="can be set to Times New Man, Arial, 宋体,黑体,楷体 etc. default is 'Times New Man'" value="Times New Man" size="3">| 
-size<input name="title_font_size" title="font size，default is 12px" value="12" size="3">px| 
-color<input name="title_font_color" title="font color default is black. set to none,gray,white,black,red,yellow,pink,green,blue etc. " value="black" size="3">
+font<input name="title_font_family" title="can be set to Times New Man, Arial, 宋体,黑体,楷体 etc. default is 'Times New Man'" value="Times New Man" size="4">| 
+size<input name="title_font_size" title="font size，default is 12px" value="12" size="4">px| 
+color<input name="title_font_color" title="font color default is black. set to none,gray,white,black,red,yellow,pink,green,blue etc. also RGB value，such as #000000" value="black" size="4">
 </td>
 </tr>
 
 <tr><td align="left" class="t_title0"  >SVG container</td></tr>
 <tr>
-<td class="t_title1"  >
-width<input name="svg_width" title="container width. default is 1000px" value="1000" size="3">px|
-height<input name="svg_height" title="container height. default is 900px" value="900" size="3">px | 
-color <input name="svg_color" title="fill color. default is white. set to none,gray,white,black,red,yellow,pink,green,blue etc." value="white" size="3">
+<td class="t_title1"  >width<input name="svg_width" title="container width. default is 1000px" value="1000" size="4">px|
+height<input name="svg_height" title="container height. default is 900px" value="900" size="4">px
 </td>
 </tr>
 
 <tr>
 <td align="left" class="t_title0"  >single chromosome container</td></tr>
-<tr><td class="t_title1"  >
-width<input name="svg_chrom_width" title="container width，default is 270px" value="270" size="3">px|
-height<input name="svg_chrom_height" title="container height, default is 400px" value="400"  size="3">px| fill<input name="svg_chrom_fill_color" title="fill color , default is none. Also can be gray,white,black,red,yellow,pink,green,blue etc." value="none" size="3">
-<br>border-width<input name="svg_chrom_border_width" title="container border width, default is 1px." value="1" size="3">px| 
-border-color<input name="svg_chrom_border_color" title="container border color ,default is none. Also can be gray,white,black,red,yellow,pink,green,blue etc. " value="none" size="3"> <br>
+<tr><td class="t_title1"  >width<input name="svg_chrom_width" title="container width，default is 270px" value="270" size="4">px|
+height<input name="svg_chrom_height" title="container height, default is 400px" value="400"  size="4">px| fill<input name="svg_chrom_fill_color" title="fill color , default is none. Also can be gray,white,black,red,yellow,pink,green,blue etc. Or RGB values, such as #000000" value="none" size="4"><br>
+border-width<input name="svg_chrom_border_width" title="container border width, default is 1px." value="1" size="4">px| 
+border-color<input name="svg_chrom_border_color" title="container border color ,default is none. Also can be gray,white,black,red,yellow,pink,green,blue etc. Or RGB values, such as #000000" value="none" size="4"> <br>
 
 </td>
 </tr>
 
 <tr><td align="left" class="t_title0" >chromosome</td></tr>
 <tr><td class="t_title1" >
-width<input name="chrom_init_width" title="default is 10px" value="10"  size="3">px| 
-height<input name="chrom_init_len" title="default is 300px. the value must be smaller than height of single chromosome container." value="300" size="3">px|
-fill<input name="chrom_fill_color" title="fill-color. default is none. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. " value="none" size="3"><br>
+width<input name="chrom_init_width" title="default is 10px" value="10"  size="4">px| 
+height<input name="chrom_init_len" title="default is 300px. the value must be smaller than height of single chromosome container." value="300" size="4">px| fill<input name="chrom_fill_color" title="fill-color. default is none. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. Or RGB value, such as #000000" value="none" size="4"><br>
 
-RX<input name="chrom_rx" title="Fillet radius in the X direction,default is 14px" value="14" size="3">px| 
-RY<input name="chrom_ry" title="Fillet radius in the Y direction,default is 14px" value="14" size="3">px <br>
-border-width<input name="chrom_border_width" title="default is 1px" value="1" size="3">px| 
-border-color<input name="chrom_border_color" title="default is black . Also The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. " value="black" size="3">
+RX<input name="chrom_rx" title="Fillet radius in the X direction,default is 14px" value="14" size="4">px| 
+RY<input name="chrom_ry" title="Fillet radius in the Y direction,default is 14px" value="14" size="4">px <br>
+border-width<input name="chrom_border_width" title="default is 1px" value="1" size="4">px| 
+border-color<input name="chrom_border_color" title="default is black . Also The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. Or RGB value, such as #000000" value="black" size="4">
 
 </td>
 </tr>
 
 <tr>
 <td align="left" class="t_title0" >gene lines</td></tr>
-<tr><td class="t_title1" >
-color<input name="gene_line_color" title="default is black. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc." value="black" size="3">|
-width<input name="gene_line_width" title="default is 0.5px" value="0.5"  size="3">px| 
-<br>type<input name="gene_line_type" title="gene lines type: can be set to '1' or '2'. '1' indicates the line is only draw one line which is middle position of gene start site and end site; '2' indicates draw lines of gene start site and end site. default is '1'." value="1"  size="3">
- 
+<tr><td class="t_title1" >color<input name="gene_line_color" title="default is black. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. Or RGB value, such as #000000" value="black" size="4">|
+width<input name="gene_line_width" title="default is 0.5px" value="0.5"  size="4">px| 
+type<input name="gene_line_type" title="gene lines type: can be set to '1' or '2'. '1' indicates the line is only draw one line which is middle position of gene start site and end site; '2' indicates draw lines of gene start site and end site. default is '1'." value="1"  size="4">
 </td>
 </tr>
 
 <tr><td align="left" class="t_title0" >gene id</td></tr>
-<tr><td class="t_title1" >
-gene_display_type <input name="gene_display_type" title="gene dispaly type: can be set 1 to 5. '1' gene id on left and right side of chromosome; 2, gene id only on left side; 3. gene id only on right side;  4. gene id on left side and gene location on right side; 5. gene id on right side and gene location on left side.  default is '1'." value="1"  size="3"> |
-font<input name="gene_name_font_family" title="default is 'Times New Man'" value="Times New Man" size="3">|
-<br>size<input name="gene_name_font_size" title="default is 11px" value="11" size="3">px| 
-margin<input name="geneName2chrom_margin" title="margin between gene ID and chromosome，default is 15px" value="15" size="3"></td>
-
+<tr><td class="t_title1" >font<input name="gene_name_font_family" title="default is 'Times New Man'" value="Times New Man" size="4">|
+size<input name="gene_name_font_size" title="default is 11px" value="11" size="4">px| 
+color<input name="gene_name_font_color" title="default is black. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. Or RGB value, such as #000000" value="black"  size="4"> <br>
+margin<input name="geneName2chrom_margin" title="margin between gene ID and chromosome，default is 15px" value="15" size="4"></td>
 </td>
 </tr>
  
 <tr><td align="left" class="t_title0" >connection between gene id and gene line</td></tr>
-<tr><td class="t_title1" >
-width<input name="link_polyline_width" title="default is 0.5px" value="0.5"  size="3">
-color<input name="$link_polyline_color" title="link color, default is black. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. " value="black"  size="3">
-
+<tr><td class="t_title1" >color<input name="link_polyline_color" title="default is black. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. Or RGB value, such as #000000" value="black" size="4">
+width<input name="link_polyline_width" title="default is 0.5px" value="0.5"  size="4">
 </td>
 </tr>
  
 
 <tr><td align="left" class="t_title0" >scale</td></tr>
 <tr><td class="t_title1" >
-units<input name="scale_unit" title="'bp'or 'cM', default is 'bp': bp=base pair, cM=centi-Morganp" value="bp"  size="3">| 
- width<input name="ruler_width" title="default is 20px" value="20"  size="3">px| 
-<br>position_X<input name="ruler_x" title="init position of scale in the X direction. default is 20px" value="20"  size="3">px 
-N_tick mark<input name="ruler_KeDu_num" title="N tick mark on the scale. default N is 10" value="10"  size="3">| 
-<br>decimal place<input name="scale_unit_float" title="decimal place, default is 0, indecates the value is integer" value="0"  size="3">|
-color<input name="scale_color" title="scale color, default is black. The value can be set to none, gray, white, black, red, yellow, pink, green, blue etc. " value="black"  size="3">
+units<input name="scale_unit" title="'bp'or 'cM', default is 'bp': bp=base pair, cM=centi-Morganp" value="bp"  size="4">| 
+ width<input name="ruler_width" title="default is 20px" value="20"  size="4">px| 
+position_X<input name="ruler_x" title="init position of scale in the X direction. default is 20px" value="20"  size="4">px<br> 
+N_tick mark<input name="ruler_KeDu_num" title="N tick mark on the scale. default N is 10" value="10"  size="4">| 
+decimal place<input name="scale_unit_float" title="decimal place, default is 0, indecates the value is integer" value="0"  size="4">
 
 </td>
 </tr>
 </table>
 </div>
 
-<div style="width:700px; float:left">
+<div style="width:800px; float:left">
 
 <table id="input" align="center" class="f_size" >
 <tr><td></td></tr>
-<tr><td class="input_note">download <a href="input_template2.xlsx" color="#DC143C">template</a> of input1 and input2  | <a href="FAQ_EN.txt">FAQ_English</a> <a href="FAQ_CH.txt">常见问题_中文版</a></td>
+<tr><td > </td>
 </tr>
 <tr>
-<td class="input_note">input1: Gene location which includes five fields:
-1.gene_id; 2.gene_start; 3.gene_end; 4.chr_id; 5.gene_color.  </td>
-<td class="input_note">input2: chromosome length which  includes two fields: 1.chr_id; 2.chr_length. </td>
+<td class="input_note">Input1 of genes' information which contains four columns:
+1.gene ID; 2.start position of gene; 3.end position of gene; 4.chromosome ID of gene</td>
+<td class="input_note">Input2 of chromosome length which contains two columns: 1.chromosome ID; 2.chromosome sequence length.</td>
 </tr>
 
 <tr>
   <td><textarea name="gene_info" rows="6" cols="63" class="input">
-AT1G06180.1	1889408	1891158	Chr1	
-AT1G08810.1	2819065	2820395	Chr1	
-AT1G08810.2	2819068	2820020	Chr1	
-AT1G09540.1	3086159	3087912	Chr1	red
-AT1G09770.1	3161841	3165360	Chr1	red
-AT1G14350.2	4907953	4911080	Chr1	
-AT1G14350.1	4908255	4911168	Chr1	
-AT1G16490.1	5629655	5630995	Chr1	
-AT1G17950.1	6177617	6179289	Chr1	red
-AT1G18570.1	6389411	6391267	Chr1	
-AT1G18710.1	6450594	6453114	Chr1	
-AT1G22640.1	8006195	8007428	Chr1	
-AT1G25340.1	8885081	8886398	Chr1	red
-AT1G25340.2	8885210	8886271	Chr1	red
-AT1G26780.1	9271029	9272128	Chr1	red
-AT1G26780.2	9271029	9272463	Chr1	
-AT1G34670.1	12709128	12710423	Chr1	
-AT1G35515.1	13077926	13080265	Chr1	
-AT1G48000.1	17704179	17706460	Chr1	
-AT1G56160.1	21022384	21023587	Chr1	
-AT1G56650.1	21233595	21235137	Chr1	
-AT1G57560.1	21316828	21318064	Chr1	
-AT1G63910.1	23719783	23721774	Chr1	
-AT1G66230.1	24677154	24678415	Chr1	red
-AT1G66370.1	24753634	24754604	Chr1	
-AT1G66380.1	24757413	24758490	Chr1	
-AT1G66390.1	24763957	24765541	Chr1	
-AT1G68320.1	25603842	25605096	Chr1	
-AT1G69560.1	26157755	26159094	Chr1	
-AT1G71030.1	26795123	26796364	Chr1	
-AT1G73410.1	27601632	27603317	Chr1	
-AT1G74080.1	27855699	27857534	Chr1	
-AT1G74430.1	27975179	27977434	Chr1	
-AT1G74650.1	28041191	28042995	Chr1	
-AT1G79180.1	29786495	29787802	Chr1	
-AT2G02820.1	804890	807139	Chr2	
-AT2G16720.1	7255529	7256580	Chr2	
-AT2G23290.1	9904787	9905920	Chr2	
-AT2G25230.1	10747211	10748467	Chr2	red
-AT2G26950.1	11500721	11502136	Chr2	red
-AT2G26960.1	11506065	11507426	Chr2	red
-AT2G31180.1	13286721	13288176	Chr2	
-AT2G32460.1	13782208	13784471	Chr2	
-AT2G32460.2	13782208	13784471	Chr2	
-AT2G36890.1	15485779	15487277	Chr2	
-AT2G37630.1	15781615	15783433	Chr2	
-AT2G39880.1	16647945	16649479	Chr2	
-AT2G40970.1	17097550	17098695	Chr2	
-AT2G47190.1	19376202	19377531	Chr2	
-AT2G47460.1	19476337	19479478	Chr2	
-AT3G01530.1	210119	211804	Chr3	
-AT3G02940.1	661873	664006	Chr3	
-AT3G06490.1	2003393	2006624	Chr3	
-AT3G08500.1	2576794	2578246	Chr3	
-AT3G09230.1	2833398	2835338	Chr3	red
-AT3G09370.1	2879366	2882267	Chr3	
-AT3G09370.2	2879366	2882267	Chr3	
-AT3G11440.1	3602093	3605104	Chr3	
-AT3G12720.1	4043310	4044609	Chr3	red
-AT3G12820.1	4074158	4075614	Chr3	
-AT3G13540.1	4420173	4421701	Chr3	
-AT3G13890.1	4576744	4578027	Chr3	
-AT3G13890.2	4576744	4578027	Chr3	red
-AT3G18100.3	6200524	6204644	Chr3	
-AT3G18100.2	6200578	6204583	Chr3	
-AT3G18100.1	6200578	6204583	Chr3	red
-AT3G23250.1	8309209	8310826	Chr3	
-AT3G23250.2	8309210	8310826	Chr3	red
-AT3G24310.1	8811131	8812364	Chr3	
-AT3G27785.1	10288603	10290934	Chr3	
-AT3G27810.1	10307421	10310308	Chr3	
-AT3G27920.1	10361945	10363506	Chr3	
-AT3G28470.1	10674508	10675724	Chr3	
-AT3G28910.1	10911157	10913190	Chr3	
-AT3G29020.2	11008117	11009456	Chr3	
-AT3G29020.1	11008614	11009413	Chr3	
-AT3G30210.1	11838363	11840502	Chr3	
-AT3G46130.2	16945364	16946461	Chr3	
-AT3G46130.1	16945433	16946376	Chr3	
-AT3G46130.3	16945433	16946376	Chr3	
-AT3G46130.4	16945525	16946376	Chr3	
-AT3G47600.1	17539338	17541230	Chr3	
-AT3G48920.1	18139392	18140561	Chr3	
-AT3G49690.1	18427735	18429201	Chr3	
-AT3G50060.1	18557970	18559106	Chr3	
-AT3G53200.1	19718282	19719462	Chr3	
-AT3G55730.1	20681904	20684053	Chr3	
-AT3G61250.1	22671002	22672738	Chr3	
-AT3G62610.1	23154758	23156585	Chr3	
-AT4G00540.1	234597	237582	Chr4	red
-AT4G01060.2	460472	461085	Chr4	red
-AT4G01060.3	460475	461068	Chr4	red
-AT4G01060.1	460531	461074	Chr4	
-AT4G01680.1	716004	717579	Chr4	red
-AT4G01680.3	716004	717579	Chr4	
-AT4G01680.2	716021	717415	Chr4	red
-AT4G05100.1	2618454	2619887	Chr4	
-AT4G09460.1	5992966	5994258	Chr4	
-AT4G12350.1	7324912	7326636	Chr4	red
-AT4G13480.1	7836675	7837684	Chr4	
-AT4G17785.1	9881635	9883432	Chr4	
-AT4G18770.1	10311030	10313104	Chr4	
-AT4G21440.1	11418246	11419760	Chr4	
-AT4G22680.1	11922340	11924216	Chr4	
-AT4G25560.1	13052555	13053618	Chr4	
-AT4G26930.1	13527770	13529172	Chr4	
-AT4G28110.1	13968029	13969384	Chr4	
-AT4G32730.1	15790345	15794252	Chr4	
-AT4G32730.2	15790345	15795854	Chr4	
-AT4G33450.1	16095392	16096610	Chr4	
-AT4G34990.1	16661329	16662367	Chr4	
-AT4G37260.1	17540490	17541799	Chr4	
-AT4G37780.1	17758243	17759557	Chr4	
-AT4G38620.1	18053551	18054999	Chr4	
-AT5G02320.1	483123	486434	Chr5	
-AT5G06100.3	1837907	1840417	Chr5	
-AT5G06100.1	1837914	1839997	Chr5	
-AT5G06100.2	1837914	1840727	Chr5	
-AT5G07690.1	2446764	2448543	Chr5	
-AT5G07700.1	2450325	2451578	Chr5	
-AT5G10280.1	3232569	3234210	Chr5	
-AT5G11050.1	3502092	3503834	Chr5	red
-AT5G11510.1	3679808	3684877	Chr5	red
-AT5G11510.2	3680452	3683633	Chr5	
-AT5G12870.1	4062724	4064992	Chr5	
-AT5G14340.1	4623367	4624847	Chr5	red
-AT5G14750.1	4763452	4764738	Chr5	
-AT5G15310.1	4974671	4976227	Chr5	
-AT5G15310.2	4974671	4976227	Chr5	red
-AT5G16600.1	5438291	5440245	Chr5	
-AT5G16770.1	5514884	5516936	Chr5	red
-AT5G16770.2	5514884	5516936	Chr5	
-AT5G17800.1	5877189	5879331	Chr5	
-AT5G23000.1	7696135	7697927	Chr5	
-AT5G26660.1	9331573	9333174	Chr5	
-AT5G35550.1	13726743	13727860	Chr5	
-AT5G39700.1	15893761	15894424	Chr5	
-AT5G40330.1	16127725	16129655	Chr5	
-AT5G40350.1	16138544	16141134	Chr5	
-AT5G40360.1	16145141	16146621	Chr5	
-AT5G40430.1	16176427	16177731	Chr5	
-AT5G49330.1	19998952	20001378	Chr5	
-AT5G49620.1	20137394	20139384	Chr5	
-AT5G49620.2	20137396	20139529	Chr5	
-AT5G52260.1	21220165	21221288	Chr5	
-AT5G52600.1	21343102	21343968	Chr5	
-AT5G54230.1	22016250	22017933	Chr5	
-AT5G55020.1	22324599	22326248	Chr5	
-AT5G56110.1	22719191	22720664	Chr5	
-AT5G57620.1	23334817	23336566	Chr5	
-AT5G58850.1	23763945	23765441	Chr5	
-AT5G59780.1	24082197	24083431	Chr5	
-AT5G59780.3	24082197	24083424	Chr5	
-AT5G59780.2	24082197	24083417	Chr5	
-AT5G60890.1	24494691	24496351	Chr5	
-AT5G61420.1	24689151	24691095	Chr5	
-AT5G61420.2	24689151	24690797	Chr5	
-AT5G62320.1	25028716	25029933	Chr5	
-AT5G62470.1	25078991	25080858	Chr5	
-AT5G62470.2	25078991	25081101	Chr5	
-AT5G65230.1	26068290	26069652	Chr5	
-AT5G65790.1	26322948	26324578	Chr5	
-AT5G67300.1	26854022	26856006	Chr5
-
+gsample1	4200	8400	Chrom01
+gsample2	15000	20000	Chrom01
+gsample3	25000	30000	Chrom01
+gsample4	35000	40000	Chrom01
+gsample5	45000	49000	Chrom01
+gsample6	3000	7000	Chrom02
+gsample7	10000	14000	Chrom02
+gsample8	18000	22000	Chrom02
+gsample9	26000	30000	Chrom02
+gsample10	35000	40000	Chrom02
   </textarea></td>
   <td ><textarea name="chrom_info" rows="6" cols="40" class="input" >
-Chr1	30427671
-Chr2	19698289
-Chr3	23459830
-Chr4	18585056
-Chr5	26975502
-
+Chrom01	54000
+Chrom02	45000
 </textarea></td>
 </tr>
 
 <tr><td colspan="2" align="center"><input type=submit value="DRAW"> <input type=reset value="RESET"></td></tr>
 <tr><td colspan="2">
-<iframe src="example21.html" id="results" name="results" height="450px" width="800px" frameborder="0" scrolling-x="auto" style="border:#999999 1px solid;font-size:14px; font:'Times New Roman', Times, serif;">aaa</iframe>
+<iframe src="example.svg" id="results" name="results" height="450px" width="800px" frameborder="0" scrolling-x="auto" style="border:#999999 1px solid;font-size:14px; font:'Times New Roman', Times, serif;">aaa</iframe>
 </td></tr>
 </table>
 
-
-
 <div id="foot" name="foot" class="bottomline" align="center">
-<div align="left" class="cite" >引用：MapGene2Chrom基于Perl和SVG语言绘制基因物理图谱. 晁江涛, 孔英珍, 王倩, 孙玉合, 龚达平, 吕婧, 刘贯山*. 遗传, 2015, 35(1): 91-97.
-<br>Cite：Chao Jiangtao, Kong, Yingzhen, Wang Qian, Sun Yuhe, Gong Daping, Lv Jing, Liu Guanshan*. (2015). Mapgene2chrom, a tool to draw gene physical map based on perl and svg languages. Hereditas, 37(1):91-97
-</div>
-Copyright to 2015~2020 MG2C bioinformatics group                     
+Copyright to 2014~2019 MG2C bioinformatics group                     
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255895091'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1255895091%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
 <br>email:chaojiangtao@caas.cn; QQ_group：830731446
-
-
-
 </div>
-
 
 </div>
 </FORM>
