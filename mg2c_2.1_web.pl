@@ -1,26 +1,27 @@
-#!C:/Perl64/bin/perl
+﻿#!C:/Perl64/bin/perl
 use strict;
 use POSIX;
 
-print "Content-type:text/html"."\n\n";
-print "<HTML>"."\n";
-print "<HEAD>"."\n";
-print "<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n";
-print "<TITLE>MapGene2Chrom</TITLE>"."\n";
-print "</HEAD>"."\n";
-print "<BODY>"."\n";
-#print "<H2>I am do my best!</H2>"."\n";
+my ($svg_info2,$temp_info);
+$svg_info2="Content-type:text/html"."\n\n";
+$svg_info2.= "<HTML>"."\n";
+$svg_info2.= "<HEAD>"."\n";
+$svg_info2.= "<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n";
+$svg_info2.="<TITLE>MapGene2Chrom</TITLE>"."\n";
+$svg_info2.= "</HEAD>"."\n";
+$svg_info2.= "<BODY>"."\n";
+$svg_info2.="<div id=\"svgContainer\">";
 
 my ($title_font_family,$title_font_size,$title_font_color);
-my ($svg_width,$svg_height);
+my ($svg_width,$svg_height,$svg_color);
 my ($svg_chrom_height,$svg_chrom_width,$svg_chrom_border_color,$svg_chrom_border_width,$svg_chrom_fill_color);
 my ($chrom_init_len,$chrom_init_width);
 my ($chrom_x,$chrom_y,$chrom_rx,$chrom_ry);
 my ($chrom_fill_color,$chrom_border_color,$chrom_border_width);
 my ($gene_display_type,$gene_line_type,$gene_line_color,$gene_line_width,$gene_name_font_color,$gene_name_font_family,$gene_name_font_size,$gene_name_margin);
-my ($link_polyline_width);
+my ($link_polyline_width,$link_polyline_color);
 my ($geneName2chrom_margin);
-my ($scale_len,$scale_chrom_margin_y,$scale_y,$scale_unit,$scale_unit_float);
+my ($scale_len,$scale_chrom_margin_y,$scale_y,$scale_unit,$scale_unit_float,$scale_color);
 
 my (@NameAndValuelists,$NameAndValue,$Name,$Value,$aatemp,@paras);
 my ($gggene_info,$ccchrom_info);
@@ -54,6 +55,7 @@ foreach $NameAndValue(@NameAndValuelists){
 
 $svg_width=getParaValue("svg_width");
 $svg_height=getParaValue("svg_height");
+$svg_color=getParaValue("svg_color");
 $svg_chrom_height=getParaValue("svg_chrom_height");
 $svg_chrom_width=getParaValue("svg_chrom_width");
 $svg_chrom_border_color=getParaValue("svg_chrom_border_color");
@@ -82,7 +84,7 @@ $gene_name_font_size=getParaValue("gene_name_font_size");
 $gene_name_margin=$gene_name_font_size;
 $geneName2chrom_margin=getParaValue("geneName2chrom_margin");
 
-#$link_polyline_color=$gene_line_color;
+$link_polyline_color=$gene_line_color;
 $link_polyline_width=getParaValue("link_polyline_width");
 
 $ruler_width=getParaValue("ruler_width");
@@ -90,6 +92,8 @@ $ruler_KeDu_num=getParaValue("ruler_KeDu_num");;
 $ruler_x=getParaValue("ruler_x");
 $scale_unit_float=getParaValue("scale_unit_float");
 $scale_unit=getParaValue("scale_unit");
+$scale_color=getParaValue("scale_color");
+
 
 
 my(@allGenes,%geneGroup,@group,$i,$rows,$columns,$chrom_num,$r,$c,$xn);
@@ -129,9 +133,10 @@ $svg_width=$ruler_x+$ruler_width+$columns*$svg_chrom_width;
 $svg_height=$rows*$svg_chrom_height;
 
 #输出SVG图形的开头部分
-$svg_info="<?xml version=\"1.0\" standalone=\"no\"?>\n";
-$svg_info.="<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
-$svg_info.="<svg width=\"$svg_width\" height=\"$svg_height\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+$temp_info="<?xml version=\"1.0\" standalone=\"no\"?>\n";
+$temp_info.="<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
+$svg_info="<svg width=\"$svg_width\" height=\"$svg_height\" color=\"$svg_color\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+
   
 #r代表rows 第r行，从0开始计数；c代表columns 第c列，从0开始计数。
 $r=0;$c=0;
@@ -145,9 +150,19 @@ for($i=0;$i<=$#chroms;$i++){
 	my ($chrom_name_x,$chrom_name_y,$chrom_name);	
 	
 	$geneNameMax=getMaxlenGeneName(@group);
-	
+	@temp=split(/\s+/,$group[0]);
 	$chrom_bps=$ch_len;
+	#if($temp[4] eq ""){
+	#	$chrom_bps=$ch_len;
+	#}else{
+	#	$chrom_bps=$temp[4];
+	#}
 	$chrom_name=$ch_name;
+	#if($temp[3] ne ""){
+	#	$chrom_name=$temp[3];
+	#}else{
+	#	$chrom_name=$ch_name;
+	#}
 	
 	$chrom_len=($chrom_bps/$maxChromUnit)*10;
 	$chrom_len=ceil($chrom_len)/10;
@@ -168,11 +183,13 @@ for($i=0;$i<=$#chroms;$i++){
     #$ruler_KeDu_num=10;
     #$ruler_x=10;
     $ruler_y=$chrom_y;
-    $ruler_color=$gene_name_font_color;
+    $ruler_color=$scale_color;
     $head_info="no";
     $ruler_info="";  
-    $ruler_info=drawRuler($ruler_height,$seq_len,$ruler_KeDu_num,$ruler_x,$ruler_y,$ruler_color,$head_info);
+    #问题出在这里，ruler的单位与染色体的单位不统一造成的。
+    $ruler_info=drawRuler($ruler_height,$seq_len,$ruler_KeDu_num,$ruler_x,$ruler_y,$ruler_color,$head_info,$maxChromUnit);
     $svg_info.=$ruler_info."\n";
+    
 	}
 	
 	#计算染色体标题应该显示的位置。
@@ -187,8 +204,9 @@ for($i=0;$i<=$#chroms;$i++){
 	$svg_info.="<rect  width=\"$svg_chrom_width\" height=\"$svg_chrom_height\" x=\"$chrom_rect_x\" y=\"$chrom_rect_y\" style=\"stroke-width:$svg_chrom_border_width;stroke:$svg_chrom_border_color; fill:$svg_chrom_fill_color;\"/>\n";
 	#输出染色体名称
 	$svg_info.="<text x=\"$chrom_name_x\" y=\"$chrom_name_y\" text-anchor=\"middle\" font-family=\"$title_font_family\" font-size=\"$title_font_size\" fill=\"$title_font_color\" >$chrom_name</text>\n";
-  #输出染色体
-  $svg_info.="<rect  width=\"$chrom_init_width\" height=\"$chrom_len\" x=\"$chrom_x\" y=\"$chrom_y\" rx=\"$chrom_rx\" ry=\"$chrom_ry\" style=\"stroke-width:$chrom_border_width;stroke:$chrom_border_color;fill:$chrom_fill_color;\"/>\n";     
+  	
+	#输出染色体
+  	$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$chrom_len\" x=\"$chrom_x\" y=\"$chrom_y\" rx=\"$chrom_rx\" ry=\"$chrom_ry\" style=\"stroke-width:$chrom_border_width;stroke:$chrom_border_color;fill:$chrom_fill_color;\"/>\n";     
 	
 	#print "$title_font_size\n";
 	
@@ -196,7 +214,7 @@ for($i=0;$i<=$#chroms;$i++){
 	my ($Rprev_y,$text_top_margin,$temp_y_margin);
 	my($poly_x1,$poly_x2,$poly_x3,$poly_x4);
   my($poly_y1,$poly_y2,$poly_y3,$poly_y4);
-  my $ccolor;
+  
    #1. 在染色体的左右两边同时画；
   if($gene_display_type==1){
   	#画将偶数基因画在染色体的左边
@@ -213,17 +231,19 @@ for($i=0;$i<=$#chroms;$i++){
        $gene_y=($gene_y1+$gene_y2)/2;
        $gene_y=sprintf("%.0f",$gene_y);
        
-       if($diy_color ne ""){$ccolor = $diy_color;}
-       else{$ccolor=$gene_line_color;}
-       #if($gene_line_type==1){
-       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";       		 		 	
-  		 #}
-  		 #if($gene_line_type==2){
-  		 #		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$ccolor;fill:$diy_color;\"/>\n";
-       #		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";
-  		 #}
+       if($gene_line_type==1){
+       	if($diy_color ne ""){$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$diy_color;stroke-width:$gene_line_width\"/>\n";}
+       	else{$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";}
+  		 	
+  		 }
+  		 if($gene_line_type==2){
+  		 	if($diy_color ne ""){$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$diy_color;fill:$diy_color;\"/>\n";}
+       	else{$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";}
+  		 	
+  		 	
+  		 }
   		  
-  		 if($j==0){$Rprev_y=$gene_y-$gene_name_font_size/2;}      
+  		 if($j==0){$Rprev_y=$gene_y;}      
        
        $text_x=$gene_x1-$geneName2chrom_margin-1;     
        
@@ -256,12 +276,18 @@ for($i=0;$i<=$#chroms;$i++){
          	 }
      	 }
        #输出基因线与基因名称的连接线；基因名称
+       if($diy_color ne ""){
+       	  #$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+       		
+       		$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gname</text>\n";
        
-       #if($diy_color ne ""){$ccolor = $diy_color;}
-       #else{$ccolor=$link_polyline_color;}
-       $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-       $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gname</text>\n";
-       
+       }else{
+      		 #$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      		 $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      		 
+      		 $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gname</text>\n";
+       }
       
        $Rprev_y=$text_y;		
   	}
@@ -280,17 +306,14 @@ for($i=0;$i<=$#chroms;$i++){
        $gene_y=sprintf("%.0f",$gene_y);
        
        my $gene_height=($gend-$gstart)/$maxChromUnit;
-       
-       if($diy_color ne ""){$ccolor = $diy_color;}
-       else{$ccolor=$gene_line_color;}       
-       #if($gene_line_type==1){
-       	 $svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";
-  		 #}
-  		 #if($gene_line_type==2){
-  		 	#$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$ccolor;fill:$ccolor;\"/>\n";     
-       #}
+       if($gene_line_type==1){
+  		 	$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";
+  		 }
+  		 if($gene_line_type==2){
+  		 	$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$gene_line_color;fill:$gene_line_color;\"/>\n";     
+  		 }
   		 
-  		 if($j==1){$Rprev_y=$gene_y-$gene_name_font_size/2;}      
+  		 if($j==1){$Rprev_y=$gene_y;}      
        
        $text_x=$gene_x2+$geneName2chrom_margin+1;  
        
@@ -323,10 +346,17 @@ for($i=0;$i<=$#chroms;$i++){
          }     	
       }
     	#输出基因线与基因名称的连接线；基因名称
-    	#if($diy_color ne ""){$ccolor = $diy_color;}
-      #else{$ccolor=$link_polyline_color;}
-      $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-      $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gname</text>\n";
+    	if($diy_color ne ""){
+       	  #$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gname</text>\n";
+      
+       }else{
+      		 #$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+     			 $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+     			 $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gname</text>\n";
+      
+       }
       
        
       $Rprev_y=$text_y;	
@@ -349,16 +379,24 @@ for($i=0;$i<=$#chroms;$i++){
        $gene_y=($gene_y1+$gene_y2)/2;
        $gene_y=sprintf("%.0f",$gene_y);
        
-       if($diy_color ne ""){$ccolor = $diy_color;}
-       else{$ccolor=$gene_line_color;}       
-       #if($gene_line_type==1){
-       	 $svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";
-  		 #}
-  		 #if($gene_line_type==2){
-  		 #	$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$ccolor;fill:$ccolor;\"/>\n";     
-       #}
+       if($gene_line_type==1){
+       	if($diy_color ne ""){
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$diy_color;stroke-width:$gene_line_width\"/>\n";
+       	}else{
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";
+       	}
+  		 	
+  		 }
+  		 if($gene_line_type==2){
+  		 	if($diy_color ne ""){
+  		 		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$diy_color;fill:$diy_color;\"/>\n";     
+  		 	}else{
+  		 		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$gene_line_color;fill:$gene_line_color;\"/>\n";     
+  		 	}
+  		 	
+  		 }
   		  
-  		 if($j==0){$Rprev_y=$gene_y-$gene_name_font_size/2;}      
+  		 if($j==0){$Rprev_y=$gene_y;}      
        
        $text_x=$gene_x1-$geneName2chrom_margin-1;     
        
@@ -391,12 +429,19 @@ for($i=0;$i<=$#chroms;$i++){
          	 }
      	 }
        #输出基因线与基因名称的连接线；基因名称
-      # if($diy_color ne ""){$ccolor = $diy_color;}
-       #else{$ccolor=$link_polyline_color;}
-      
-       $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-       $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gname</text>\n";
+       if($diy_color ne ""){
+       		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      	  $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      	  
+      	  $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gname</text>\n";
        
+       }else{
+       		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gname</text>\n";
+       
+       }
+        
        $Rprev_y=$text_y;
   	}
   	
@@ -418,16 +463,24 @@ for($i=0;$i<=$#chroms;$i++){
        $gene_y=sprintf("%.0f",$gene_y);
        
        my $gene_height=($gend-$gstart)/$maxChromUnit;
-       if($diy_color ne ""){$ccolor = $diy_color;}
-       else{$ccolor=$gene_line_color;}       
-       #if($gene_line_type==1){
-       	 $svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";
-  		 #}
-  		 #if($gene_line_type==2){
-  		 	# $svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$ccolor;fill:$ccolor;\"/>\n";     
-       #}
+       if($gene_line_type==1){
+       	if($diy_color ne ""){
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$diy_color;stroke-width:$gene_line_width\"/>\n";
+       	}else{
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";
+       	}
+  		 	
+  		 }
+  		 if($gene_line_type==2){
+  		 	if($diy_color ne ""){
+       		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$diy_color;fill:$diy_color;\"/>\n"; 
+       	}else{
+       		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$gene_line_color;fill:$gene_line_color;\"/>\n"; 
+       	}
+  		 	    
+  		 }
   		 
-  		 if($j==1){$Rprev_y=$gene_y-$gene_name_font_size/2;}      
+  		 if($j==1){$Rprev_y=$gene_y;}      
        
        $text_x=$gene_x2+$geneName2chrom_margin+1;  
        
@@ -460,12 +513,17 @@ for($i=0;$i<=$#chroms;$i++){
          }     	
       }
     	#输出基因线与基因名称的连接线；基因名称
-    	#if($diy_color ne ""){$ccolor = $diy_color;}
-      #else{$ccolor=$link_polyline_color;}
+    	if($diy_color ne ""){
+    		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      	$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      	$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gname</text>\n";
       
-    	$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-      $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gname</text>\n";
-             
+    	}else{
+    		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      	$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      	$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gname</text>\n";
+      }
+       
       $Rprev_y=$text_y;	
   	}
   	
@@ -486,16 +544,23 @@ for($i=0;$i<=$#chroms;$i++){
        $gene_y=($gene_y1+$gene_y2)/2;
        $gene_y=sprintf("%.0f",$gene_y);
        
-       if($diy_color ne ""){$ccolor = $diy_color;}
-       else{$ccolor=$gene_line_color;}       
-       #if($gene_line_type==1){
-       	 $svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";
-  		 #}
-  		 #if($gene_line_type==2){
-  		 #	$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$ccolor;fill:$ccolor;\"/>\n";     
-      # } 
+       if($gene_line_type==1){
+       	if($diy_color ne ""){
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$diy_color;stroke-width:$gene_line_width\"/>\n";
+       	}else{
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";
+       	}
+  		 	
+  		 }
+  		 if($gene_line_type==2){
+  		 	if($diy_color ne ""){
+       		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$diy_color;fill:$diy_color;\"/>\n";     
+  		 }else{
+  		 		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$gene_line_color;fill:$gene_line_color;\"/>\n";     
+  		 }
+  		}
   		  
-  		 if($j==0){$Rprev_y=$gene_y-$gene_name_font_size/2;}      
+  		 if($j==0){$Rprev_y=$gene_y;}      
        
        $text_x=$gene_x1-$geneName2chrom_margin-1;     
        
@@ -530,11 +595,18 @@ for($i=0;$i<=$#chroms;$i++){
      	 
         
        #输出基因线与基因名称的连接线；基因名称
-       #if($diy_color ne ""){$ccolor = $diy_color;}
-       #else{$ccolor=$link_polyline_color;}
-       $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-       $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gname</text>\n";
-              
+       if($diy_color ne ""){
+       		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      	 $svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      	 $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gname</text>\n";
+       
+       	}else{
+       		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gname</text>\n";
+       
+       	}
+       
        #输出基因线与基因位置的连接线；基因位置
      	 my($nx1,$nx2,$nx3,$nx4,$na,$txx);
      	 $na=$poly_x1+0.5*$chrom_init_width;
@@ -543,9 +615,18 @@ for($i=0;$i<=$#chroms;$i++){
      	 $nx3=2*$na-$poly_x3;
      	 $nx4=2*$na-$poly_x4;
      	 $txx=2*$na-$text_x;
-       $svg_info.="<polyline points=\"$nx1,$poly_y1 $nx2,$poly_y2 $nx3,$poly_y3 $nx4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-       $svg_info.="<text x=\"$txx\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gstart</text>\n";
+       if($diy_color ne ""){
+       		#$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx2,$poly_y2 $nx3,$poly_y3 $nx4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<text x=\"$txx\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gstart</text>\n";
       
+       	}else{
+       		#$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx2,$poly_y2 $nx3,$poly_y3 $nx4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<text x=\"$txx\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gstart</text>\n";
+      
+       	}
+       
        $Rprev_y=$text_y;
   	}
   	
@@ -566,17 +647,24 @@ for($i=0;$i<=$#chroms;$i++){
        $gene_y=sprintf("%.0f",$gene_y);
        
        my $gene_height=($gend-$gstart)/$maxChromUnit;
-       
-       if($diy_color ne ""){$ccolor = $diy_color;}
-       else{$ccolor=$gene_line_color;}       
-       #if($gene_line_type==1){
-       	 $svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$ccolor;stroke-width:$gene_line_width\"/>\n";
-  		 #}
-  		 #if($gene_line_type==2){
-  		# 	$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$ccolor;fill:$ccolor;\"/>\n";     
-      # }
+       if($gene_line_type==1){
+       	if($diy_color ne ""){
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$diy_color;stroke-width:$gene_line_width\"/>\n";
+       	}else{
+       		$svg_info.="<line x1=\"$gene_x1\" y1=\"$gene_y\" x2=\"$gene_x2\" y2=\"$gene_y\" style=\"stroke:$gene_line_color;stroke-width:$gene_line_width\"/>\n";
+       	}
+  		 	
+  		 }
+  		 if($gene_line_type==2){
+  		 	if($diy_color ne ""){
+       		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$diy_color;fill:$diy_color;\"/>\n";     
+       	}else{
+       		$svg_info.="<rect  width=\"$chrom_init_width\" height=\"$gene_height\" x=\"$gene_x1\" y=\"$gene_y1\" style=\"stroke-width:$gene_line_width;stroke:$gene_line_color;fill:$gene_line_color;\"/>\n";     
+       	}
+  		 	
+  		 }
   		 
-  		 if($j==1){$Rprev_y=$gene_y-$gene_name_font_size/2;}      
+  		 if($j==1){$Rprev_y=$gene_y;}      
        
        $text_x=$gene_x2+$geneName2chrom_margin+1;  
        
@@ -611,11 +699,17 @@ for($i=0;$i<=$#chroms;$i++){
       
      
     	#输出基因线与基因名称的连接线；基因名称
-    	#if($diy_color ne ""){$ccolor = $diy_color;}
-      #else{$ccolor=$link_polyline_color;}
-    	$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-      $svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gname</text>\n";
+    	if($diy_color ne ""){
+       		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gname</text>\n";
       
+       	}else{
+       		#$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x2,$poly_y2 $poly_x3,$poly_y3 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<polyline points=\"$poly_x1,$poly_y1 $poly_x4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+      		$svg_info.="<text x=\"$text_x\" y=\"$text_y\" text-anchor=\"start\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gname</text>\n";
+      
+       	}
       
        #输出基因线与基因位置的连接线；基因位置
      	 my($nx1,$nx2,$nx3,$nx4,$na,$txx);
@@ -625,10 +719,18 @@ for($i=0;$i<=$#chroms;$i++){
      	 $nx3=2*$na-$poly_x3;
      	 $nx4=2*$na-$poly_x4;
      	 $txx=2*$na-$text_x;
-       
-       $svg_info.="<polyline points=\"$nx1,$poly_y1 $nx2,$poly_y2 $nx3,$poly_y3 $nx4,$poly_y4\" style=\"fill:none;stroke:$ccolor;stroke-width:$link_polyline_width\"/>\n";
-       $svg_info.="<text x=\"$txx\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$ccolor\">$gstart</text>\n";
+       if($diy_color ne ""){
+       		#$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx2,$poly_y2 $nx3,$poly_y3 $nx4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx4,$poly_y4\" style=\"fill:none;stroke:$diy_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<text x=\"$txx\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$diy_color\">$gstart</text>\n";
       
+       	}else{
+       		#$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx2,$poly_y2 $nx3,$poly_y3 $nx4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<polyline points=\"$nx1,$poly_y1 $nx4,$poly_y4\" style=\"fill:none;stroke:$link_polyline_color;stroke-width:$link_polyline_width\"/>\n";
+       		$svg_info.="<text x=\"$txx\" y=\"$text_y\" text-anchor=\"end\" font-family=\"$gene_name_font_family\" font-size=\"$gene_name_font_size\"  fill=\"$gene_name_font_color\">$gstart</text>\n";
+      
+       	}
+       
       $Rprev_y=$text_y;	
   	}
   	
@@ -640,26 +742,39 @@ for($i=0;$i<=$#chroms;$i++){
 }
 
 $svg_info.='</svg>';
+$svg_info=$temp_info.$svg_info;
 
-print "<br>".$svg_info."<br>";
 
 my $hdir1="mg2c_v2.1";
 my $hdir2="temp";
 my $file=time()."_".int(rand(1000)).".svg";
 my $output="$hdir1/$hdir2/$file";
+my $output1="$hdir2/$file";
+print "Chrome, FireFox or IE9+ support SVG files better.<br>";
+print "Success! download <a color='#FF0000' href='$output1' style='text-decoration:none;'>SVG file</a> by right click and save file to your PC.<br>";
+
+print "<br>".$svg_info2."\n".$svg_info."</div><br>";
+print '<button onclick="svg2jpg()">download JPG1</button> &nbsp;&nbsp;';
+print '<button onclick="svg2png()">download PNG1</button> &nbsp;&nbsp;';
+print '<button onclick="svg2tiff()">download TIFF1</button> &nbsp;&nbsp;';
+print '<br><a href="'.$output1.'" download="'.$output1.'">download SVG file by right-click and save it as local file.</a>';
+
+
 open(OUT,">$output");
 print OUT $svg_info;
 close OUT;
 
-my $output="$hdir2/$file";
-print "Success! download the svg file by right click <a href='$output' style='text-decoration:none;'> here </a> by FirFox or IE9+<br>";
+
+#print "Success! Save <a color='#FF0000' href='$output1' style='text-decoration:none;'>SVG file</a> by right click and save file to your PC.<br>";
 
 print "</BODY>"."\n";
+print '<script src="js/svg2img.js"></script>';
+print '<script src="js/svg3.js"></script>';
 print "</HTML>"."\n";
 
 #绘制染色体标尺
 sub drawRuler{
-	my ($ruler_height,$seq_len,$ruler_KeDu_num,$ruler_x,$ruler_y,$ruler_color)=@_;
+	my ($ruler_height,$seq_len,$ruler_KeDu_num,$ruler_x,$ruler_y,$ruler_color,$maxChromUnit)=@_;
 	
 	my ($line_x,$line_y,$line_len,$arrow_height,$arrow_width,$line_color,$line_width);
 	my ($x1,$y1,$x2,$y2);
@@ -669,21 +784,22 @@ sub drawRuler{
 	$line_y=$ruler_y;
 	$arrow_height=6;
 	$arrow_width=3;
-	$line_width=1;
+	$line_width=2;
 	$line_len=$ruler_height+$arrow_height*2;
 	$line_color=$ruler_color;
 	
-	#my $seq_len=1024*1024*1024;
+	#my $seq_len=1000*1000*1000;
 	my $ruler_unit=$seq_len/$ruler_KeDu_num;
 	my $ruler_unit_str;
 	my $ruler_step;
 	if($scale_unit eq "bp"){
-		if($ruler_unit/(1024*1024)>=1){
+		if($ruler_unit/(1000*1000)>=1){
   		$ruler_unit_str=" Mb";
-  		$ruler_step=sprintf("%0.".$scale_unit_float."f",$ruler_unit/(1024*1024));
-  	}elsif($ruler_unit/(1024)>=1){
+  		#$ruler_step=sprintf("%0.".$scale_unit_float."f",$ruler_unit/(1000*1000));
+		$ruler_step=sprintf("%0.".$scale_unit_float."f",$ruler_unit/(1000*1000));
+  	}elsif($ruler_unit/(1000)>=1){
   		$ruler_unit_str=" Kb";
-  		$ruler_step=sprintf("%0.".$scale_unit_float."f",$ruler_unit/1024);
+  		$ruler_step=sprintf("%0.".$scale_unit_float."f",$ruler_unit/1000);
   	}else{
   		$ruler_unit_str=" bp";
   		$ruler_step=sprintf("%0.".$scale_unit_float."f",$ruler_unit);				
@@ -800,7 +916,7 @@ sub getMaxChromLen{
 		#print "$maxChromLen\t$chromLen<br>";
 		#print "$line ----$chromLen===$maxChromLen<br>";
 	}		
-			
+	#$maxChromLen=$maxChromLen;		
 	$maxChromLen;
 }
 
@@ -868,14 +984,15 @@ sub getMaxChromUnit{
 		if($chromLen<1){
 			#print "$line chromLen must be more than 1<br>";			
 		}else{
+			#染色体长度，除以染色体初始尺寸。
 			$unit=$chromLen/$chrom_init_len;
 			$unit=sprintf("%.$scale_unit_float"."f",$unit);	
 			#print "$line=$unit 2222<br>";			
 		}
 		
 		if($scale_unit eq "bp"){
-			if($unit>=1024){
-				$unit=(ceil($unit/1024))*1024;
+			if($unit>=1000){
+				$unit=(ceil($unit/1000))*1000;
 			}
 			
 		}elsif($scale_unit eq "cM"){
@@ -889,7 +1006,6 @@ sub getMaxChromUnit{
 		}
 	}
 	
-	#print "maxChromUnit=$maxChromUnit<br>";	
 	$maxChromUnit;
 }
 

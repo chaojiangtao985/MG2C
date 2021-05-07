@@ -1,0 +1,22 @@
+Supplement 2. Frequently asked questions
+
+(1) How to download results? You can download SVG files by right-click the blue words “SVG files”.
+
+(2) Which internet browser can support SVG language? Google chrome,firefoxor any other internet browser support SVG display..
+
+(3) If some chromosomes are not shown in genetic map, how to adjust? The width and height of the SVG container set the maximum size for the genetic map. If there are too many chromosomes, some of them will appear outside the border of SVG container and cannot be displayed.So,you need to increase the height or width of the SVG Container appropriately.
+
+(4)What can I do if some  chromosomes are not shown completely? The width and height of “single chromosome container” defines the maximum size of each chromosome, while the width and height of “chromosome” set the size for chromosomes. So, you can reduce the height  of “chromosome” or increase the height of “single chromosome container”
+
+(5) The default gene line is marked in the middle of the gene. Can the starting and ending positions of the gene be displayed at the same time? “Type of gene lines” is a parameter about the display type of gene lines, which can be set as 1 or 2, 1 represents the gene line is marked in the middle of gene.2 represents the gene line marked at  the starting and ending positions of the gene at the same time .The default value is 1.
+
+(6) How to change the display type of genes? “Gene_display_type” sets five display styles for genes’ id: 1. Genes’ id is displayed alternately on both sides of chromosomes; 2. All genes’ id is on the left; 3. All genes’ id is on the right; 4. All genes’ id is on the left, and the distance is on the right; 5. All genes’ id are on the right and the distance is on the left. The default value is 1.
+
+(7) How to customize special colors for different genes? In the gene location information, gene_color field can be set font color for gene id, such as "black", "red" and "gray" or the page color code "#00dd00".
+
+(8) How to change the size of margin between gene id and chromosome? By change the value of  margin of “gene id”.
+
+(9) What can I do if some genes’ id are overlapped? Generally, MG2C is able to avoid such situations. If overlap still exists, it is suggested to solve it by synchronizing the height of “chromosome” and “single chrome container”. Please note that the height of “chromosome” must be smaller than the height of  “single chrome container”, and the  appropriate difference is around 100.
+
+(10) If you found that chrom_len is not consistent with the value of the scale, how to solve it? You can change the parameter value of decimal place from 0 to 1 or 2.
+
