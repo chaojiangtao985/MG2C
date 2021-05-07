@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MapGene2Chrom web v2</title>
+
+<style type="text/css">
+.t_title{border-bottom:solid 1px green; color:gray; font-size:13; font:"宋体";  border-right:solid 1px green;}
+.t_title2{border-bottom:solid 1px green; color:gray; font-size:13; font:"宋体";  border-left:solid 1px green;border-right:solid 1px green;}
+.f_size{font-size:13;}
+a{ color:#000000; text-decoration:none;}
+.topline{border-bottom:#009966 4px solid; padding-left:30px;padding-top:30px; margin-left: auto;margin-right: auto;}
+.bottomline{border-top:#009966 2px solid; padding-top:10px;padding-bottom:30px;}
+
+</style>
+
+</head>
+<body>
+    
+<FORM METHOD=POST ACTION="mapGene2Chrom_web_v1.1.pl">
+<div style="background-color:#EEEEEE; width:800px;margin-left: auto;margin-right: auto; " class="bottomline">
+
+<table id="input" align="center" class="f_size" >
+<tr><td></td></tr>
+<tr><td colspan="2" align="center">
+<label Align="center" style="font:'Times New Roman', Times, serif; font-size:30px; line-height:70px; font-weight:bold;">MG2C 1.1</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="../mg2c_v1.0" class="STYLE1">v1.0</a> | <a href="../mg2c_v1.1">v1.1</a> | <a href="../mg2c_v2.0">v2.0</a>  | <a href="../mg2c_v2.1">v2.1</a>
+
+</td>
+</tr>
+<tr>
+<td>基因信息输入框，包括四列：
+1.基因名称；2.起始位<br>置；3.终止位置；4.所在染色体名称 如：</td>
+<td>染色体或scaffold长度信息，包括两列：
+1. 染色体名称；2. 染色体长度。如：</td>
+</tr>
+
+<tr>
+  <td><textarea name="gene_info" rows="6" cols="45" class="f_size" >
+gsample1	4200	8400	Chrom01
+gsample2	15000	20000	Chrom01
+gsample3	25000	30000	Chrom01
+gsample4	35000	40000	Chrom01
+gsample5	45000	49000	Chrom01
+gsample6	3000	7000	Chrom02
+gsample7	10000	14000	Chrom02
+gsample8	18000	22000	Chrom02
+gsample9	26000	30000	Chrom02
+gsample10	35000	40000	Chrom02
+  </textarea></td>
+  <td ><textarea name="chrom_info" rows="6" cols="35" class="f_size" >
+Chrom01	54000
+Chrom02	45000
+</textarea></td>
+</tr>
+
+<tr><td colspan="2" align="center"><input type=submit value="绘图"> <input type=reset value="重置"></td>
+</tr>
+</table>
+
+
+
+<table id="option" style="border:inline green;" align="center" width="700">
+
+<tr>
+<td align="center" class="t_title2" colspan="2">高级选项：绘图输出参数设置</td>
+
+</tr>
+
+<tr>
+<td align="right" class="t_title2" >染色体标题</td>
+<td class="t_title">字体<input name="title_font_family" title="中文可输入“宋体/黑体/楷体/等”；英文可输入“Arial,Time New Man 等”" value="Arial" size="4"> 
+大小<input name="title_font_size" title="字体大小参数，可随意设置，默认为12号字" value="12" size="4">
+颜色<input name="title_font_color" title="颜色可输入none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="green" size="4">
+</td>
+</tr>
+
+<tr>
+<td align="right" class="t_title2">染色体整个区域</td>
+<td class="t_title">宽度<input name="svg_width" title="该参数是设置染色体图片在多大的背景范围内设置，此为宽度，默认1000px" value="1000" size="4">
+高度<input name="svg_height" title="该参数是设置染色体图片在多大的背景范围内设置，此为高度，默认900px" value="900" size="4"> 
+</td>
+</tr>
+
+<tr>
+<td align="right" class="t_title2">单染色体容器</td>
+<td class="t_title">宽度<input name="svg_chrom_width" title="单染色体容器的宽度，默认为270x" value="270" size="4">
+高度<input name="svg_chrom_height" title="单染色体容器的高度，默认为400px" value="400"  size="4">
+填充<input name="svg_chrom_fill_color" title="单染色体容器的填充色，默认none，即无颜色。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="none" size="4">
+边色<input name="svg_chrom_border_color" title="单染色体容器的边框线颜色，默认none，即边框线无颜色。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="none" size="4"> 
+
+边宽<input name="svg_chrom_border_width" title="单染色体容器的边框线宽度，默认1px" value="1" size="4"> 
+</td>
+</tr>
+
+<tr>
+<td align="right" class="t_title2">染色体</td>
+<td class="t_title">
+宽度<input name="chrom_init_width" title="染色体的宽度。默认为10px" value="10"  size="4">
+高度<input name="chrom_init_len" title="染色体的高度，该值的一定要小于染色体容器的高度，建议至少相差50px。默认为300px" value="300" size="4">
+RX值<input name="chrom_rx" title="染色体两端的圆角参数rx，值越大，两端越尖，经验值为染色体宽度的1.4倍较为协调，默认为14px" value="14" size="4">
+
+ RY值<input name="chrom_ry" title="染色体两端的圆角参数rx，值越大，两端越尖，经验值为染色体宽度的1.4倍较为协调，默认为14px" value="14" size="4">
+ 填充<input name="chrom_fill_color" title="染色体的填充色，默认为none，即无色。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="none" size="4"><br>
+ 边色<input name="chrom_border_color" title="染色体的边框线颜色，默认green。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="green" size="4">
+ 边宽<input name="chrom_border_width" title="染色体的边框线宽度，默认1px" value="1" size="4">
+</td>
+
+</tr>
+
+<tr>
+<td align="right" class="t_title2">基因位置线</td>
+<td class="t_title">颜色<input name="gene_line_color" title="基因位置线的颜色。默认为green。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="green" size="4">
+宽度<input name="gene_line_width" title="基因位置线的宽度。默认为0.5px" value="0.5"  size="4">
+类型<input name="gene_line_type" title="基因位置类型：1绘制基因上下边界的中间线；2绘制基因上下边界。默认值为1" value="1"  size="4">
+</td>
+</tr>
+
+<tr>
+<td align="right" class="t_title2">基因名称</td>
+<td class="t_title">字体<input name="gene_name_font_family" title="字体，默认为Arial" value="Arial" size="4">
+颜色<input name="gene_name_font_color" title="字体颜色。默认为green。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="green"  size="4">
+大小<input name="gene_name_font_size" title="字体大小，默认为11号字" value="11" size="4">
+间距<input name="geneName2chrom_margin" title="与染色体边框线的间距，默认为15px" value="15" size="4"></td>
+</td>
+</tr>
+ 
+<tr>
+<td align="right" class="t_title2">位置线与名称连线</td>
+<td class="t_title">颜色<input name="link_polyline_color" title="连线线条的颜色，默认为green。可设置为none,gray,white,black,red,yellow,pink,green,blue等，也可输入RGB值，如#000000" value="green" size="4">
+宽度<input name="link_polyline_width" title="连线线条的宽度。默认为0.5px" value="0.5"  size="4">
+</td>
+</tr>
+ 
+
+<tr>
+<td align="right" class="t_title2">染色体标尺</td>
+<td class="t_title"> 标尺宽度<input name="ruler_width" title="标尺的宽度，默认为20px" value="20"  size="4">
+标尺位置<input name="ruler_x" title="标尺初始位置的x值。横向为X轴，纵向为Y轴,y值取决于染色体位置,默认为20" value="20"  size="4">
+刻度数量<input name="ruler_KeDu_num" title="需要在标尺上画几个刻度线？默认为10个" value="10"  size="4"><br>
+绘图用物理距离/遗传距离<input name="scale_unit" title="采用哪种方式绘图: bp=base pair表示物理距离, cM=centiMorgan表示遗传距离。默认为bp" value="bp"  size="4">
+ 有效数字<input name="scale_unit_float" title="标尺数字的有效数字位数，默认为0" value="0"  size="4">
+
+</td>
+</tr>
+</table>
+
+
+<p align="left" style="color:blue;font-size:12px;">
+	2014-11-21 发行V1.1 中文版本，在1.0 版本基础上，在染色体组的左侧增加了标尺。提供【<a style="color:green" href="files\MapGene2Chrom_web_v1.1.zip">V1.1 网页版源码</a>】
+	</p>
+
+<div id="foot" name="foot" class="bottomline" align="center">
+Copyright to 2014~2019 MG2C bioinformatics group 
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255895091'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1255895091%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<br>email:chaojiangtao@caas.cn; QQ交流群：830731446
+</div>
+</div>
+</FORM>
+
+</body>
+</html>
