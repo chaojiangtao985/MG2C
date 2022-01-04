@@ -1,30 +1,30 @@
  var svgToImg;
   window.onload = function () {
-    // ��ȡ��svg��ǩ
+    // 获取到svg标签
     var svg = document.querySelector('svg');
-    // ʵ��������
+    // 实例化对象
     svgToImg = new svgToImg(svg);
   }
 
-  // ����
+  // 下载
   function change() {
-    // svgתͼƬ
+    // svg转图片
     console.log(11);
     svgToImg.change('Marydon', 'jpg');
   }
   
   function svg2jpg() {
-    // svgתͼƬ
+    // svg转图片
     console.log(11);
     svgToImg.change('Marydon', 'jpg');
   }
   function svg2png() {
-    // svgתͼƬ
+    // svg转图片
     console.log(11);
     svgToImg.change('Marydon', 'png');
   }
   function svg2tiff() {
-    // svgתͼƬ
+    // svg转图片
     console.log(11);
     svgToImg.change('Marydon', 'tiff');
   }
