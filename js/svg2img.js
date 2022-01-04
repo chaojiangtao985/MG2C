@@ -4,58 +4,58 @@
     };
     global.svgToImg.prototype = {
         /**
-         * svg×ªÍ¼Æ¬
+         * svgè½¬å›¾ç‰‡
          * @description
-         * 1.½«svg×ªbase64£»
-         * 2.½«base64¸ñÊ½µÄsvg×ªÖ¸¶¨µÄÍ¼Æ¬¸ñÊ½²¢ÏÂÔØ
+         * 1.å°†svgè½¬base64ï¼›
+         * 2.å°†base64æ ¼å¼çš„svgè½¬æŒ‡å®šçš„å›¾ç‰‡æ ¼å¼å¹¶ä¸‹è½½
          * @param fileName
-         * Í¼Æ¬Ãû³Æ
+         * å›¾ç‰‡åç§°
          * @param imgType
-         * Í¼Æ¬ÀàĞÍ£ºjpg/png/bmp
+         * å›¾ç‰‡ç±»å‹ï¼šjpg/png/bmp
          *
          */
         change: function (fileName, imgType) {
             var This = this;
-            //1.¸øsvg±êÇ©Ìí¼ÓÊôĞÔ£ºversionºÍxmlns
+            //1.ç»™svgæ ‡ç­¾æ·»åŠ å±æ€§ï¼šversionå’Œxmlns
             [
                 ['version', 1.1],
                 ['xmlns', "http://www.w3.org/2000/svg"],
             ].forEach(function (item) {
                 This.svgHtml.setAttribute(item[0], item[1]);
             });
-            // 2.»ñÈ¡µ½svg±êÇ©+±êÇ©ÄÚµÄËùÓĞÔªËØ
+            // 2.è·å–åˆ°svgæ ‡ç­¾+æ ‡ç­¾å†…çš„æ‰€æœ‰å…ƒç´ 
             var str = This.svgHtml.parentNode.innerHTML;
 
-            //3.´´½¨img
+            //3.åˆ›å»ºimg
             var img = document.createElement('img');
 
-            // 4.svg¸ñÊ½µÄbase64Í¼Ïñ
+            // 4.svgæ ¼å¼çš„base64å›¾åƒ
             img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(str))));
-            //base64¸ñÊ½µÄsvg
+            //base64æ ¼å¼çš„svg
             //document.getElementById('baseSvg').src='data:image/svg+xml;base64,'+ btoa(unescape(encodeURIComponent(str)));
 
-            // 5.×ª»»³ÉÖ¸¶¨Í¼Æ¬¸ñÊ½
+            // 5.è½¬æ¢æˆæŒ‡å®šå›¾ç‰‡æ ¼å¼
             img.onload = function () {
-                // 1.´´½¨canvas
+                // 1.åˆ›å»ºcanvas
                 var canvas = document.createElement('canvas');
                 var context = canvas.getContext("2d");
 
                 canvas.width = img.width;
                 canvas.height = img.height;
-                // 2.¸ù¾İbase64¸ñÊ½µÄsvgÉú³Écanvas
+                // 2.æ ¹æ®base64æ ¼å¼çš„svgç”Ÿæˆcanvas
                 context.drawImage(img, 0, 0);
 
-                // 3.½«canvas×ª×Ö·û´®£¨°´Ö¸¶¨ºÃµÄÍ¼Æ¬¸ñÊ½£©
+                // 3.å°†canvasè½¬å­—ç¬¦ä¸²ï¼ˆæŒ‰æŒ‡å®šå¥½çš„å›¾ç‰‡æ ¼å¼ï¼‰
                 var canvasData = canvas.toDataURL("image/" + imgType);
-                // 4.´´½¨Í¼Æ¬ÔªËØ
+                // 4.åˆ›å»ºå›¾ç‰‡å…ƒç´ 
                 var img2 = document.createElement('img');
-                // 5.Éú³ÉÍ¼Æ¬
+                // 5.ç”Ÿæˆå›¾ç‰‡
                 img2.setAttribute('src', canvasData);
 
-                // 6.ÏÂÔØ¸ÃÍ¼Æ¬
+                // 6.ä¸‹è½½è¯¥å›¾ç‰‡
                 img2.onload = function () {
                     var a = document.createElement("a");
-                    // ÏÂÔØ
+                    // ä¸‹è½½
                     a.download = fileName + "." + imgType;
                     a.href = img2.getAttribute('src');
                     a.click();
